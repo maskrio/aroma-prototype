@@ -61,10 +61,14 @@ export default function PemilikDashboardPage() {
             <div className="text-xs text-[var(--muted-foreground)]">Pesanan</div>
             <div className="mt-1 text-lg font-bold">{orderCount}</div>
           </div>
-          <div className="rounded-2xl bg-white p-4 shadow-sm border border-[var(--border)]">
+          <Link
+            href="/pemilik/stok"
+            className="rounded-2xl bg-white p-4 shadow-sm border border-[var(--border)] transition active:scale-[0.98] hover:border-[var(--accent)]"
+          >
             <div className="text-xs text-[var(--muted-foreground)]">Stok Menipis</div>
             <div className="mt-1 text-lg font-bold text-[var(--destructive)]">{lowStock}</div>
-          </div>
+            <div className="text-[10px] text-[var(--muted-foreground)]">Bandingkan →</div>
+          </Link>
         </div>
 
         {/* Filter tabs */}

@@ -370,6 +370,167 @@ export function hargaUntuk(variant: Variant, unitId: string): number {
   return variant.harga.find((h) => h.unitId === unitId)?.harga ?? 0;
 }
 
+// -----------------------------------------------------------------------------
+// Inventory movements (append-only ledger) — simulated for the last 60 days.
+// In the real system this will live in Postgres; here we generate it client-side
+// so the stock-comparison screen has something to chart.
+// -----------------------------------------------------------------------------
+
+export interface InventoryMovement {
+  variantId: string;
+  type: "BELI" | "JUAL"; // buy (masuk), sell (keluar)
+  qty: number;           // always in base unit (pcs)
+  date: string;          // YYYY-MM-DD (local)
+  hargaSatuan: number;   // per pcs, for omset calculation
+}
+
+// Deterministic PRNG so the demo numbers don't change between renders.
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function ymd(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+export const HISTORY_DAYS = 60;
+
+function generateMovements(): InventoryMovement[] {
+  const out: InventoryMovement[] = [];
+  const rng = mulberry32(42);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (const v of variants) {
+    // Rough daily sell rate scaled to current stock.
+    const baseSellRate = Math.max(1, Math.round(v.stok / 18));
+    for (let back = HISTORY_DAYS; back >= 0; back--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - back);
+      const dateStr = ymd(d);
+
+      // Weekend bump (6=Sat, 0=Sun)
+      const dow = d.getDay();
+      const weekendMult = dow === 0 || dow === 6 ? 1.4 : 1;
+
+      // Daily sales (sometimes zero for slow-movers).
+      const saleQty = Math.floor(rng() * baseSellRate * 2 * weekendMult);
+      if (saleQty > 0) {
+        out.push({
+          variantId: v.id,
+          type: "JUAL",
+          qty: saleQty,
+          date: dateStr,
+          hargaSatuan: v.harga[0]?.harga ?? 0,
+        });
+      }
+      // Restock roughly once every 8-10 days.
+      if (rng() < 0.11) {
+        const buyQty = Math.floor(rng() * baseSellRate * 30) + 20;
+        // Buy price is cheaper than sell price (~15-25% margin).
+        const hargaBeli = Math.round((v.harga[0]?.harga ?? 0) * (0.7 + rng() * 0.15));
+        out.push({
+          variantId: v.id,
+          type: "BELI",
+          qty: buyQty,
+          date: dateStr,
+          hargaSatuan: hargaBeli,
+        });
+      }
+    }
+  }
+  return out;
+}
+
+export const inventoryMovements: InventoryMovement[] = generateMovements();
+
+/**
+ * Stock of a variant at end-of-day on the given date.
+ * Works by starting from current stock (today) and rewinding movements after `date`.
+ */
+export function stockOnDate(variantId: string, date: Date): number {
+  const v = findVariant(variantId);
+  if (!v) return 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+
+  if (target.getTime() >= today.getTime()) return v.stok;
+
+  const targetStr = ymd(target);
+  // Movements strictly AFTER target date.
+  let delta = 0;
+  for (const m of inventoryMovements) {
+    if (m.variantId !== variantId) continue;
+    if (m.date > targetStr) {
+      delta += m.type === "BELI" ? m.qty : -m.qty;
+    }
+  }
+  return v.stok - delta;
+}
+
+/** Movements where targetDate > from and targetDate <= to (inclusive of `to`). */
+export function movementsBetween(
+  variantId: string,
+  from: Date,
+  to: Date,
+): InventoryMovement[] {
+  const fromStr = ymd(from);
+  const toStr = ymd(to);
+  return inventoryMovements.filter(
+    (m) =>
+      m.variantId === variantId &&
+      m.date > fromStr &&
+      m.date <= toStr,
+  );
+}
+
+export interface StockCompareRow {
+  variantId: string;
+  stokA: number;
+  stokB: number;
+  beli: number;
+  jual: number;
+  omsetJual: number;
+  biayaBeli: number;
+}
+
+export function buildStockCompare(
+  from: Date,
+  to: Date,
+  variantIds: string[] = variants.map((v) => v.id),
+): StockCompareRow[] {
+  return variantIds.map((id) => {
+    const moves = movementsBetween(id, from, to);
+    const beli = moves.filter((m) => m.type === "BELI").reduce((s, m) => s + m.qty, 0);
+    const jual = moves.filter((m) => m.type === "JUAL").reduce((s, m) => s + m.qty, 0);
+    const omsetJual = moves
+      .filter((m) => m.type === "JUAL")
+      .reduce((s, m) => s + m.qty * m.hargaSatuan, 0);
+    const biayaBeli = moves
+      .filter((m) => m.type === "BELI")
+      .reduce((s, m) => s + m.qty * m.hargaSatuan, 0);
+    return {
+      variantId: id,
+      stokA: stockOnDate(id, from),
+      stokB: stockOnDate(id, to),
+      beli,
+      jual,
+      omsetJual,
+      biayaBeli,
+    };
+  });
+}
+
 // Fake "pending orders" queue for owner dashboard.
 export interface FakeOrder {
   id: string;
