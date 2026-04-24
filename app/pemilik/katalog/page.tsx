@@ -105,9 +105,9 @@ export default function KatalogListPage() {
 
       {/* Product rows */}
       <div className="flex-1 overflow-auto px-4 pb-6">
-        <div className="space-y-2">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
           {list.length === 0 ? (
-            <div className="rounded-2xl bg-white p-8 text-center text-[var(--muted-foreground)]">
+            <div className="rounded-2xl bg-white p-8 text-center text-[var(--muted-foreground)] md:col-span-2 xl:col-span-3">
               Tidak ada barang cocok.
             </div>
           ) : (
@@ -117,7 +117,7 @@ export default function KatalogListPage() {
                 <Link
                   key={v.id}
                   href={`/pemilik/katalog/${v.id}`}
-                  className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-white p-3 transition active:scale-[0.99] hover:border-[var(--primary)]"
+                  className="flex items-start gap-3 rounded-2xl border border-[var(--border)] bg-white p-3 transition active:scale-[0.99] hover:border-[var(--primary)]"
                 >
                   <div
                     className={cn(
@@ -129,15 +129,20 @@ export default function KatalogListPage() {
                     {v.emoji}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate font-semibold">{v.namaPendek}</div>
-                    <div className="truncate text-xs text-[var(--muted-foreground)]">
-                      {v.brand} · {category?.nama ?? "Tanpa kategori"} · {v.harga.length} satuan
+                    <div className="line-clamp-2 font-semibold leading-snug break-words">
+                      {v.namaPendek}
+                    </div>
+                    <div className="mt-0.5 text-xs text-[var(--muted-foreground)] break-words">
+                      {v.brand} · {category?.nama ?? "Tanpa kategori"}
+                    </div>
+                    <div className="text-xs text-[var(--muted-foreground)]">
+                      {v.harga.length} satuan · Stok {v.stok}
                     </div>
                   </div>
                   <div className="shrink-0 text-right">
                     <div className="text-sm font-bold">{rupiah(v.harga[0]?.harga ?? 0)}</div>
-                    <div className="text-xs text-[var(--muted-foreground)]">
-                      Stok {v.stok}
+                    <div className="text-[10px] text-[var(--muted-foreground)]">
+                      /{v.harga[0]?.unitId ?? "pcs"}
                     </div>
                   </div>
                 </Link>

@@ -83,10 +83,10 @@ export default function KeranjangPage() {
                         {line.variant.emoji}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="truncate font-semibold leading-tight">
+                        <div className="line-clamp-2 font-semibold leading-snug break-words">
                           {line.variant.namaPendek}
                         </div>
-                        <div className="text-sm text-[var(--muted-foreground)]">
+                        <div className="mt-0.5 text-sm text-[var(--muted-foreground)]">
                           {rupiah(line.hargaSatuan)} / {u?.singkatan ?? line.unitId}
                         </div>
                       </div>

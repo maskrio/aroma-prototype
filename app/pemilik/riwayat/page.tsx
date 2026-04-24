@@ -165,7 +165,7 @@ export default function RiwayatPage() {
                                   {o.kasirNama} · {formatTime(o.approvedAt)} · {itemCount} item
                                 </div>
                                 {o.catatan ? (
-                                  <div className="mt-1 truncate text-xs italic text-[var(--muted-foreground)]">
+                                  <div className="mt-1 line-clamp-2 text-xs italic text-[var(--muted-foreground)]">
                                     "{o.catatan}"
                                   </div>
                                 ) : null}

@@ -276,9 +276,9 @@ export default function StokPage() {
             </section>
 
             {/* Product rows */}
-            <section className="p-4 space-y-3">
+            <section className="grid grid-cols-1 gap-3 p-4 md:grid-cols-2 xl:grid-cols-3">
               {sortedRows.length === 0 ? (
-                <div className="rounded-2xl bg-white p-8 text-center text-[var(--muted-foreground)]">
+                <div className="rounded-2xl bg-white p-8 text-center text-[var(--muted-foreground)] md:col-span-2 xl:col-span-3">
                   Tidak ada barang sesuai filter.
                 </div>
               ) : (
@@ -309,8 +309,10 @@ export default function StokPage() {
                           {v.emoji}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="truncate font-semibold">{v.namaPendek}</div>
-                          <div className="truncate text-xs text-[var(--muted-foreground)]">
+                          <div className="line-clamp-2 font-semibold leading-snug break-words">
+                            {v.namaPendek}
+                          </div>
+                          <div className="mt-0.5 line-clamp-2 text-xs text-[var(--muted-foreground)] break-words">
                             {v.brand}{c ? ` · ${c.nama}` : ""}
                           </div>
                         </div>

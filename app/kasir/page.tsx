@@ -104,7 +104,7 @@ export default function KasirHomePage() {
               <div className="mb-3 mt-1 text-sm text-[var(--muted-foreground)]">
                 {searchResults.length} hasil untuk "{query}"
               </div>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                 {searchResults.map((v) => (
                   <ProductTile key={v.id} variant={v} href={`/kasir/produk/${v.id}`} />
                 ))}
@@ -147,7 +147,7 @@ export default function KasirHomePage() {
                 <div className="mb-2 text-sm text-[var(--muted-foreground)]">
                   Barang paling sering kamu jual.
                 </div>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                   {favoriteVariants.map((v) => (
                     <ProductTile key={v!.id} variant={v!} href={`/kasir/produk/${v!.id}`} />
                   ))}
@@ -165,7 +165,7 @@ export default function KasirHomePage() {
                     >
                       ← Semua kategori
                     </button>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                       {catVariants.map((v) => (
                         <ProductTile
                           key={v.id}
@@ -176,7 +176,7 @@ export default function KasirHomePage() {
                     </div>
                   </>
                 ) : (
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                     {categories.map((c) => (
                       <button
                         key={c.id}
@@ -209,7 +209,7 @@ export default function KasirHomePage() {
             ) : null}
 
             {tab === "semua" ? (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                 {allVariants.map((v) => (
                   <ProductTile key={v.id} variant={v} href={`/kasir/produk/${v.id}`} />
                 ))}

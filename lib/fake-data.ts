@@ -183,8 +183,8 @@ export const variants: Variant[] = [
   },
   {
     id: "plk010",
-    nama: "Kantong Kresek L Hitam pak 100",
-    namaPendek: "Kresek L Hitam",
+    nama: "Kresek Plastik 28x50 Hitam pak 100",
+    namaPendek: "Kresek L 28×50 Hitam",
     brand: "Generik",
     kategoriId: "plastik",
     emoji: "🛍️",
@@ -197,8 +197,8 @@ export const variants: Variant[] = [
   },
   {
     id: "plk011",
-    nama: "Kantong Plastik HD 20x35 pak 100",
-    namaPendek: "Plastik HD 20x35",
+    nama: "Plastik HD 20x35 Clear pak 100",
+    namaPendek: "HD 20×35 Clear",
     brand: "Generik",
     kategoriId: "plastik",
     emoji: "📦",
@@ -221,6 +221,205 @@ export const variants: Variant[] = [
     harga: [
       { unitId: "pcs", harga: 1200, konversi: 1 },
       { unitId: "pak", harga: 28000, konversi: 25 },
+    ],
+  },
+  // --- PLASTIK: KRESEK (berbagai ukuran & brand) ---
+  {
+    id: "plk013",
+    nama: "Kresek Plastik 17x35 Hitam pak 100",
+    namaPendek: "Kresek S 17×35 Hitam",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "🛍️",
+    warnaBg: "bg-stone-200",
+    stok: 600,
+    harga: [
+      { unitId: "pcs", harga: 180, konversi: 1 },
+      { unitId: "pak", harga: 18000, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk014",
+    nama: "Kresek Plastik 17x35 Merah pak 100",
+    namaPendek: "Kresek S 17×35 Merah",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "🛍️",
+    warnaBg: "bg-red-100",
+    stok: 480,
+    harga: [
+      { unitId: "pcs", harga: 180, konversi: 1 },
+      { unitId: "pak", harga: 18500, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk015",
+    nama: "Kresek Plastik 22x40 Hitam pak 100",
+    namaPendek: "Kresek M 22×40 Hitam",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "🛍️",
+    warnaBg: "bg-stone-200",
+    stok: 400,
+    harga: [
+      { unitId: "pcs", harga: 260, konversi: 1 },
+      { unitId: "pak", harga: 25000, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk016",
+    nama: "Kresek Plastik 22x40 Hitam pak 100 Tomat",
+    namaPendek: "Kresek M 22×40 Tomat",
+    brand: "Tomat",
+    kategoriId: "plastik",
+    emoji: "🛍️",
+    warnaBg: "bg-stone-200",
+    stok: 250,
+    harga: [
+      { unitId: "pcs", harga: 300, konversi: 1 },
+      { unitId: "pak", harga: 28000, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk017",
+    nama: "Kresek Plastik 28x50 Hitam pak 100 Tomat",
+    namaPendek: "Kresek L 28×50 Tomat",
+    brand: "Tomat",
+    kategoriId: "plastik",
+    emoji: "🛍️",
+    warnaBg: "bg-stone-200",
+    stok: 200,
+    harga: [
+      { unitId: "pcs", harga: 400, konversi: 1 },
+      { unitId: "pak", harga: 36000, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk018",
+    nama: "Kresek Plastik 35x60 Hitam pak 100",
+    namaPendek: "Kresek XL 35×60 Hitam",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "🛍️",
+    warnaBg: "bg-stone-300",
+    stok: 180,
+    harga: [
+      { unitId: "pcs", harga: 500, konversi: 1 },
+      { unitId: "pak", harga: 45000, konversi: 100 },
+    ],
+  },
+  // --- PLASTIK: HD (High-Density, clear) berbagai ukuran & brand ---
+  {
+    id: "plk019",
+    nama: "Plastik HD 15x25 Clear pak 100",
+    namaPendek: "HD 15×25 Clear",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "📦",
+    warnaBg: "bg-slate-100",
+    stok: 700,
+    harga: [
+      { unitId: "pcs", harga: 150, konversi: 1 },
+      { unitId: "pak", harga: 14000, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk020",
+    nama: "Plastik HD 17x30 Clear pak 100",
+    namaPendek: "HD 17×30 Clear",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "📦",
+    warnaBg: "bg-slate-100",
+    stok: 600,
+    harga: [
+      { unitId: "pcs", harga: 180, konversi: 1 },
+      { unitId: "pak", harga: 16500, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk021",
+    nama: "Plastik HD 20x35 Clear pak 100 Wong",
+    namaPendek: "HD 20×35 Wong",
+    brand: "Wong",
+    kategoriId: "plastik",
+    emoji: "📦",
+    warnaBg: "bg-sky-100",
+    stok: 400,
+    harga: [
+      { unitId: "pcs", harga: 240, konversi: 1 },
+      { unitId: "pak", harga: 22000, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk022",
+    nama: "Plastik HD 25x40 Clear pak 100",
+    namaPendek: "HD 25×40 Clear",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "📦",
+    warnaBg: "bg-slate-100",
+    stok: 450,
+    harga: [
+      { unitId: "pcs", harga: 250, konversi: 1 },
+      { unitId: "pak", harga: 24000, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk023",
+    nama: "Plastik HD 25x40 Clear pak 100 Wong",
+    namaPendek: "HD 25×40 Wong",
+    brand: "Wong",
+    kategoriId: "plastik",
+    emoji: "📦",
+    warnaBg: "bg-sky-100",
+    stok: 280,
+    harga: [
+      { unitId: "pcs", harga: 290, konversi: 1 },
+      { unitId: "pak", harga: 27500, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk024",
+    nama: "Plastik HD 30x45 Clear pak 100",
+    namaPendek: "HD 30×45 Clear",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "📦",
+    warnaBg: "bg-slate-100",
+    stok: 300,
+    harga: [
+      { unitId: "pcs", harga: 340, konversi: 1 },
+      { unitId: "pak", harga: 32000, konversi: 100 },
+    ],
+  },
+  // --- PLASTIK: PP (Polypropylene, kaku) ---
+  {
+    id: "plk025",
+    nama: "Plastik PP 15x30 Clear pak 100",
+    namaPendek: "PP 15×30 Clear",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "📄",
+    warnaBg: "bg-cyan-100",
+    stok: 380,
+    harga: [
+      { unitId: "pcs", harga: 160, konversi: 1 },
+      { unitId: "pak", harga: 15000, konversi: 100 },
+    ],
+  },
+  {
+    id: "plk026",
+    nama: "Plastik PP 20x35 Clear pak 100",
+    namaPendek: "PP 20×35 Clear",
+    brand: "Generik",
+    kategoriId: "plastik",
+    emoji: "📄",
+    warnaBg: "bg-cyan-100",
+    stok: 320,
+    harga: [
+      { unitId: "pcs", harga: 200, konversi: 1 },
+      { unitId: "pak", harga: 19500, konversi: 100 },
     ],
   },
   // --- MINUMAN ---
@@ -555,17 +754,17 @@ export const variants: Variant[] = [
 // Ordered roughly by "jual terbanyak" for a plastik-heavy grosir.
 export const favoritIds: string[] = [
   "plk001", // Gelas 12oz Merapi
+  "plk013", // Kresek S 17×35 Hitam
+  "plk015", // Kresek M 22×40 Hitam
+  "plk010", // Kresek L 28×50 Hitam
   "plk009", // Sedotan biasa
-  "plk010", // Kresek L hitam
-  "plk005", // Gelas 12oz Star
   "plk008", // Sedotan boba
+  "plk011", // HD 20×35 Clear
+  "plk020", // HD 17×30 Clear
   "mnm001", // Aqua 600ml
-  "mnm006", // Coca Cola
   "kue001", // Terigu Segitiga
   "kue003", // Gulaku 1kg
   "kue009", // Pondan Brownies
-  "mnm008", // Good Day
-  "snk003", // Beng Beng
 ];
 
 export function findVariant(id: string): Variant | undefined {
