@@ -65,7 +65,7 @@ export default function KatalogImporPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
       <TopBar
         title="Impor dari Excel"
         subtitle={stage === "pilih" ? "Pilih file" : "Tinjau sebelum simpan"}
@@ -74,7 +74,7 @@ export default function KatalogImporPage() {
       />
 
       {stage === "pilih" ? (
-        <div className="flex-1 p-6 space-y-4">
+        <div className="flex-1 overflow-auto p-6 space-y-4">
           <div className="rounded-2xl border-2 border-dashed border-[var(--border)] bg-white p-8 text-center">
             <div className="mb-3 text-6xl">📊</div>
             <div className="mb-1 text-lg font-semibold">Tarik file Excel ke sini</div>
@@ -109,7 +109,7 @@ export default function KatalogImporPage() {
 
       {stage === "preview" ? (
         <>
-          <div className="bg-white px-4 py-3 border-b border-[var(--border)]">
+          <div className="shrink-0 bg-white px-4 py-3 border-b border-[var(--border)]">
             <div className="mb-2 text-sm">
               File: <span className="font-semibold">katalog-baru.xlsx</span> · {counts.semua} baris
             </div>
@@ -134,7 +134,7 @@ export default function KatalogImporPage() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-auto p-4 pb-40">
+          <div className="flex-1 overflow-auto p-4">
             <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
               <table className="w-full text-sm">
                 <thead className="bg-[var(--muted)]">
@@ -180,7 +180,7 @@ export default function KatalogImporPage() {
             </div>
           </div>
 
-          <div className="no-print sticky bottom-0 z-10 border-t border-[var(--border)] bg-white p-4">
+          <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4">
             <BigButton variant="primary" onClick={() => setStage("selesai")}>
               Impor {counts.ok + counts.warn} Barang
             </BigButton>

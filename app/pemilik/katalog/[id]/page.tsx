@@ -56,7 +56,7 @@ export default function KatalogEditPage({
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
       <TopBar
         title="Edit Barang"
         subtitle={variant.brand}
@@ -70,7 +70,7 @@ export default function KatalogEditPage({
         </div>
       ) : null}
 
-      <div className="flex-1 overflow-auto p-4 pb-40 space-y-4">
+      <div className="flex-1 overflow-auto p-4 space-y-4">
         <section className="rounded-2xl border border-[var(--border)] bg-white p-4 space-y-3">
           <label className="block">
             <div className="mb-1 text-sm font-semibold text-[var(--muted-foreground)]">Nama lengkap</div>
@@ -212,7 +212,7 @@ export default function KatalogEditPage({
         </section>
       </div>
 
-      <div className="no-print sticky bottom-0 z-10 border-t border-[var(--border)] bg-white p-4">
+      <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4">
         <BigButton variant="primary" onClick={handleSave}>
           Simpan Perubahan
         </BigButton>

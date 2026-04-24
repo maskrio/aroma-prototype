@@ -42,9 +42,9 @@ export default function StrukPage({
   const now = new Date();
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col overflow-hidden">
       {/* Non-print toolbar */}
-      <div className="no-print sticky top-0 z-10 flex items-center justify-between border-b border-[var(--border)] bg-white px-4 py-3">
+      <div className="no-print shrink-0 flex items-center justify-between border-b border-[var(--border)] bg-white px-4 py-3">
         <button
           onClick={() => router.back()}
           className="flex h-11 items-center gap-2 rounded-full px-3 text-[var(--foreground)] hover:bg-[var(--muted)]"
@@ -60,7 +60,7 @@ export default function StrukPage({
       </div>
 
       {/* Receipt paper */}
-      <div className="flex flex-1 justify-center bg-[var(--muted)] p-4 print:bg-white print:p-0">
+      <div className="flex flex-1 justify-center overflow-auto bg-[var(--muted)] p-4 print:bg-white print:p-0">
         <div className="w-full max-w-sm rounded-xl bg-white p-5 text-sm shadow-sm print:shadow-none print:rounded-none print:max-w-none">
           <div className="mb-3 text-center">
             <div className="text-lg font-bold">TOKO DEMO</div>
@@ -102,7 +102,7 @@ export default function StrukPage({
         </div>
       </div>
 
-      <div className="no-print p-4">
+      <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4">
         <BigButton variant="primary" onClick={() => router.replace("/kasir")}>
           Selesai — Kembali Jualan
         </BigButton>

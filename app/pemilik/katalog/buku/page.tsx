@@ -62,7 +62,7 @@ export default function KatalogBukuPage() {
 
   if (stage === "intro") {
     return (
-      <div className="flex flex-1 flex-col bg-[var(--background)]">
+      <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
         <TopBar title="Foto Buku Catatan" back="/pemilik/katalog" variant="accent" />
         <div className="flex flex-1 flex-col p-6 space-y-4">
           <div className="rounded-2xl border border-[var(--border)] bg-white p-5">
@@ -119,7 +119,7 @@ export default function KatalogBukuPage() {
 
   if (stage === "proses") {
     return (
-      <div className="flex flex-1 flex-col bg-[var(--background)]">
+      <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
         <TopBar title="Memproses…" variant="accent" />
         <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
           <div className="mb-6 text-7xl">🔎</div>
@@ -141,14 +141,14 @@ export default function KatalogBukuPage() {
 
   if (stage === "review") {
     return (
-      <div className="flex flex-1 flex-col bg-[var(--background)]">
+      <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
         <TopBar
           title="Hasil Pembacaan"
           subtitle={`${items.length} baris terbaca · ${acceptedCount} akan disimpan`}
           back="/pemilik/katalog/buku"
           variant="accent"
         />
-        <div className="flex-1 overflow-auto p-4 pb-40 space-y-2">
+        <div className="flex-1 overflow-auto p-4 space-y-2">
           {items.map((it, i) => {
             const lowConf = it.confidence < 0.75;
             return (
@@ -217,7 +217,7 @@ export default function KatalogBukuPage() {
             );
           })}
         </div>
-        <div className="no-print sticky bottom-0 z-10 border-t border-[var(--border)] bg-white p-4">
+        <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4">
           <BigButton variant="primary" onClick={() => setStage("selesai")}>
             Simpan {acceptedCount} Barang
           </BigButton>

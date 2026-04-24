@@ -575,3 +575,104 @@ export const fakeOrders: FakeOrder[] = [
     ],
   },
 ];
+
+// -----------------------------------------------------------------------------
+// Receipt history — confirmed past orders spread over the last 14 days.
+// Shape matches the snapshot written to sessionStorage by the owner-approve flow
+// so /pemilik/struk/[id] can render historical orders with the same component.
+// -----------------------------------------------------------------------------
+
+export interface PastOrderLine {
+  variantId: string;
+  unitId: string;
+  qty: number;
+  hargaAsli: number;
+  hargaNego: number;
+  adjusted: boolean;
+}
+
+export interface PastOrder {
+  id: string;
+  nomor: string;
+  kasirNama: string;
+  approvedAt: string; // ISO
+  lines: PastOrderLine[];
+  subtotalAsli: number;
+  subtotalNego: number;
+  potongan: number;
+  totalAkhir: number;
+  catatan: string;
+}
+
+function generatePastOrders(): PastOrder[] {
+  const orders: PastOrder[] = [];
+  const rng = mulberry32(1337);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const kasirs = ["Budi", "Siti", "Ani", "Rudi"];
+  let ordNum = 38; // numbering stops below the current pending #0039-#0041
+
+  for (let back = 14; back >= 1; back--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - back);
+    // Slightly busier on weekends.
+    const dow = date.getDay();
+    const weekendBoost = dow === 0 || dow === 6 ? 1 : 0;
+    const ordersToday = Math.floor(rng() * 3) + 1 + weekendBoost; // 1-4
+
+    for (let i = 0; i < ordersToday; i++) {
+      const itemCount = Math.floor(rng() * 4) + 1; // 1-4 unique items
+      const chosen = new Set<string>();
+      for (let j = 0; j < itemCount * 2 && chosen.size < itemCount; j++) {
+        chosen.add(variants[Math.floor(rng() * variants.length)].id);
+      }
+
+      let anyAdjusted = false;
+      const lines: PastOrderLine[] = [...chosen].map((id) => {
+        const v = findVariant(id)!;
+        const priceRow = v.harga[Math.floor(rng() * v.harga.length)];
+        const unitId = priceRow.unitId;
+        const hargaAsli = priceRow.harga;
+        const qty = Math.floor(rng() * 4) + 1;
+        const doNego = rng() < 0.15;
+        if (doNego) anyAdjusted = true;
+        const hargaNego = doNego
+          ? Math.floor((hargaAsli * (0.85 + rng() * 0.1)) / 500) * 500
+          : hargaAsli;
+        return { variantId: id, unitId, qty, hargaAsli, hargaNego, adjusted: doNego };
+      });
+
+      const subtotalAsli = lines.reduce((s, l) => s + l.hargaAsli * l.qty, 0);
+      const subtotalNego = lines.reduce((s, l) => s + l.hargaNego * l.qty, 0);
+      const doPotongan = rng() < 0.2;
+      const potongan = doPotongan ? (Math.floor(rng() * 5) + 1) * 1000 : 0;
+      const totalAkhir = Math.max(0, subtotalNego - potongan);
+
+      const approved = new Date(date);
+      approved.setHours(9 + Math.floor(rng() * 11), Math.floor(rng() * 60));
+      const catatan = anyAdjusted ? "Pelanggan nego" : "";
+
+      orders.push({
+        id: `past_${ordNum}`,
+        nomor: `#${String(ordNum).padStart(4, "0")}`,
+        kasirNama: kasirs[Math.floor(rng() * kasirs.length)],
+        approvedAt: approved.toISOString(),
+        lines,
+        subtotalAsli,
+        subtotalNego,
+        potongan,
+        totalAkhir,
+        catatan,
+      });
+      ordNum--;
+    }
+  }
+  // Most recent first.
+  return orders.sort((a, b) => b.approvedAt.localeCompare(a.approvedAt));
+}
+
+export const pastOrders: PastOrder[] = generatePastOrders();
+
+export function findPastOrder(id: string): PastOrder | undefined {
+  return pastOrders.find((o) => o.id === id);
+}

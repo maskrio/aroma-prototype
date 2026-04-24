@@ -45,10 +45,10 @@ export default function ProdukDetailPage({
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
       <TopBar title={variant.namaPendek} subtitle={variant.brand} back="/kasir" />
 
-      <div className="flex-1 overflow-auto p-4 pb-36">
+      <div className="flex-1 overflow-auto p-4">
         <div
           className={cn(
             "mb-4 flex h-48 items-center justify-center rounded-2xl text-7xl",
@@ -114,8 +114,8 @@ export default function ProdukDetailPage({
         </div>
       </div>
 
-      {/* Sticky bottom action bar */}
-      <div className="no-print sticky bottom-0 z-10 border-t border-[var(--border)] bg-white p-4 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
+      {/* Bottom action bar */}
+      <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
         <BigButton
           variant="primary"
           onClick={handleTambah}

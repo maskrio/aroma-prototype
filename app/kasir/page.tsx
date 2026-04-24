@@ -45,46 +45,44 @@ export default function KasirHomePage() {
   }, []);
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col overflow-hidden">
       <TopBar
         title="Toko Demo"
-        subtitle="Kasir: Budi"
+        subtitle="Kasir"
         right={
           <Link
-            href="/kasir/keranjang"
+            href="/"
             className="flex h-11 items-center gap-2 rounded-full bg-white/15 px-3 text-white text-sm font-semibold hover:bg-white/25"
-            aria-label="Scan barcode"
+            aria-label="Keluar"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <rect x="3" y="5" width="3" height="14" />
-              <rect x="8" y="5" width="1.5" height="14" />
-              <rect x="12" y="5" width="2" height="14" />
-              <rect x="16" y="5" width="1.5" height="14" />
-              <rect x="19" y="5" width="2" height="14" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 17l5-5-5-5" />
+              <path d="M20 12H9" />
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
             </svg>
-            Scan
+            Keluar
           </Link>
         }
       />
 
       {/* Search bar — always present, dominant */}
-      <div className="no-print sticky top-16 z-10 bg-[var(--background)] px-4 pb-3 pt-3 shadow-sm">
-        <div className="flex items-center gap-2 rounded-2xl border-2 border-[var(--border)] bg-white px-4 focus-within:border-[var(--primary)]">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--muted-foreground)]">
+      <div className="no-print shrink-0 bg-[var(--background)] px-4 pb-3 pt-3">
+        <div className="flex items-center gap-2 rounded-2xl border-2 border-[var(--border)] bg-white px-3 focus-within:border-[var(--primary)]">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 text-[var(--muted-foreground)]">
             <circle cx="11" cy="11" r="7" />
             <path d="M21 21l-4.3-4.3" strokeLinecap="round" />
           </svg>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Cari barang… (contoh: indomie)"
-            className="h-14 w-full bg-transparent text-lg outline-none placeholder:text-[var(--muted-foreground)]"
+            placeholder="Cari barang…"
+            className="h-14 min-w-0 w-full bg-transparent text-base outline-none placeholder:text-[var(--muted-foreground)]"
             inputMode="search"
           />
           {query ? (
             <button
               onClick={() => setQuery("")}
-              className="rounded-full p-1 text-[var(--muted-foreground)] hover:bg-[var(--muted)]"
+              className="shrink-0 rounded-full p-1 text-[var(--muted-foreground)] hover:bg-[var(--muted)]"
               aria-label="Hapus pencarian"
             >
               ✕
@@ -117,7 +115,7 @@ export default function KasirHomePage() {
       ) : (
         <>
           {/* Tabs */}
-          <div className="no-print flex gap-2 px-4 pb-3">
+          <div className="no-print shrink-0 flex gap-2 px-4 pb-3">
             {(
               [
                 { key: "favorit", label: "⭐ Favorit" },

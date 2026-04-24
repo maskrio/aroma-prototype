@@ -48,7 +48,7 @@ export default function KatalogBaruPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
       <TopBar
         title="Barang Baru"
         subtitle={`Langkah ${step} dari 3`}
@@ -75,7 +75,7 @@ export default function KatalogBaruPage() {
         ))}
       </div>
 
-      <div className="flex-1 overflow-auto p-4 pb-36">
+      <div className="flex-1 overflow-auto p-4">
         {step === 1 ? (
           <section className="space-y-4 rounded-2xl border border-[var(--border)] bg-white p-4">
             <div className="text-lg font-semibold">1. Info dasar</div>
@@ -255,7 +255,7 @@ export default function KatalogBaruPage() {
       </div>
 
       {/* Footer nav */}
-      <div className="no-print sticky bottom-0 z-10 border-t border-[var(--border)] bg-white p-4">
+      <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4">
         <div className="flex gap-3">
           {step > 1 ? (
             <BigButton variant="outline" onClick={() => setStep((s) => (s - 1) as 1 | 2 | 3)}>

@@ -95,7 +95,7 @@ export default function StokPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
       <TopBar
         title="Bandingkan Stok"
         subtitle={invalidRange ? "Rentang tanggal tidak valid" : `${daySpan} hari`}

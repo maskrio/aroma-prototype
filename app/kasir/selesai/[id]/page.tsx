@@ -43,8 +43,8 @@ export default function SelesaiPage({
   const totalItems = lines.reduce((s, l) => s + l.qty, 0);
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
-      <div className="flex flex-1 flex-col items-center p-6 pt-8 text-center">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
+      <div className="flex flex-1 flex-col items-center overflow-auto p-6 pt-8 text-center">
         <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-[var(--primary)] text-5xl text-white shadow-lg">
           ✓
         </div>

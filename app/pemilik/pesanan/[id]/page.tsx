@@ -138,7 +138,7 @@ export default function PesananDetailPage({
       : null;
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
       <TopBar
         title={`Pesanan ${order.nomor}`}
         subtitle={`${order.kasirNama} · ${waktuLalu(order.waktu)}`}
@@ -152,7 +152,7 @@ export default function PesananDetailPage({
         </div>
       ) : null}
 
-      <div className="flex-1 overflow-auto p-4 pb-40 space-y-4">
+      <div className="flex-1 overflow-auto p-4 space-y-4">
         {/* Nego toggle */}
         {status === "PENDING" ? (
           <div className="rounded-2xl border-2 border-[var(--border)] bg-white p-3">
@@ -370,7 +370,7 @@ export default function PesananDetailPage({
       </div>
 
       {status === "PENDING" ? (
-        <div className="no-print sticky bottom-0 z-10 border-t border-[var(--border)] bg-white p-4 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
+        <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
           <div className="grid grid-cols-3 gap-3">
             <BigButton variant="danger" size="lg" onClick={handleCancel} className="col-span-1">
               Batal

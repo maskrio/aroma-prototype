@@ -24,7 +24,7 @@ export default function KatalogListPage() {
   }, [query, cat]);
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
       <TopBar
         title="Katalog"
         subtitle={`${allVariants.length} barang`}

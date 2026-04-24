@@ -16,19 +16,18 @@ export default function KeranjangPage() {
 
   if (!ready) {
     return (
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col overflow-hidden">
         <TopBar title="Keranjang" back="/kasir" />
       </div>
     );
   }
 
   function handleKirim() {
-    // Push to waiting screen — owner will confirm there (simulated).
     router.push("/kasir/tunggu");
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--background)]">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[var(--background)]">
       <TopBar
         title="Keranjang"
         subtitle={totalItems > 0 ? `${totalItems} item` : "Belum ada barang"}
@@ -63,58 +62,69 @@ export default function KeranjangPage() {
         </div>
       ) : (
         <>
-          <div className="flex-1 overflow-auto p-4 pb-40">
-            <div className="space-y-3">
+          <div className="flex-1 overflow-auto p-4">
+            <ul className="space-y-3">
               {lines.map((line) => {
                 const u = findUnit(line.unitId);
                 return (
-                  <div
+                  <li
                     key={`${line.variantId}-${line.unitId}`}
-                    className="flex items-start gap-3 rounded-2xl border border-[var(--border)] bg-white p-3"
+                    className="rounded-2xl border border-[var(--border)] bg-white p-3"
                   >
-                    <div
-                      className={cn(
-                        "flex h-16 w-16 shrink-0 items-center justify-center rounded-xl text-3xl",
-                        line.variant.warnaBg,
-                      )}
-                      aria-hidden
-                    >
-                      {line.variant.emoji}
+                    {/* Row 1: image + name + remove */}
+                    <div className="flex items-start gap-3">
+                      <div
+                        className={cn(
+                          "flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-3xl",
+                          line.variant.warnaBg,
+                        )}
+                        aria-hidden
+                      >
+                        {line.variant.emoji}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate font-semibold leading-tight">
+                          {line.variant.namaPendek}
+                        </div>
+                        <div className="text-sm text-[var(--muted-foreground)]">
+                          {rupiah(line.hargaSatuan)} / {u?.singkatan ?? line.unitId}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => remove(line.variantId, line.unitId)}
+                        aria-label="Hapus dari keranjang"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[var(--destructive)] hover:bg-red-50"
+                      >
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 6h18" />
+                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        </svg>
+                      </button>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate font-semibold">
-                        {line.variant.namaPendek}
-                      </div>
-                      <div className="text-sm text-[var(--muted-foreground)]">
-                        {rupiah(line.hargaSatuan)} / {u?.singkatan ?? line.unitId}
-                      </div>
-                      <div className="mt-2 flex items-center justify-between gap-2">
-                        <QtyStepper
-                          value={line.qty}
-                          onChange={(n) => setQty(line.variantId, line.unitId, n)}
-                          size="md"
-                        />
-                        <div className="text-right">
-                          <div className="text-lg font-bold text-[var(--primary)]">
-                            {rupiah(line.subtotal)}
-                          </div>
-                          <button
-                            onClick={() => remove(line.variantId, line.unitId)}
-                            className="text-xs text-[var(--destructive)] hover:underline"
-                          >
-                            Hapus
-                          </button>
+
+                    {/* Row 2: stepper + subtotal */}
+                    <div className="mt-3 flex items-center justify-between gap-3 border-t border-dashed border-[var(--border)] pt-3">
+                      <QtyStepper
+                        value={line.qty}
+                        onChange={(n) => setQty(line.variantId, line.unitId, n)}
+                        size="md"
+                      />
+                      <div className="min-w-0 text-right">
+                        <div className="text-xs text-[var(--muted-foreground)]">Subtotal</div>
+                        <div className="truncate text-xl font-bold text-[var(--primary)]">
+                          {rupiah(line.subtotal)}
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
 
-          {/* Sticky summary + submit */}
-          <div className="no-print sticky bottom-0 z-10 border-t border-[var(--border)] bg-white p-4 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
+          {/* Bottom summary + submit */}
+          <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
             <div className="mb-3 flex items-center justify-between">
               <div className="text-sm text-[var(--muted-foreground)]">
                 Total ({totalItems} item)

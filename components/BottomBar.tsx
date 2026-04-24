@@ -20,7 +20,7 @@ interface BottomBarProps {
 export function BottomBar({ items }: BottomBarProps) {
   const pathname = usePathname();
   return (
-    <nav className="no-print sticky bottom-0 z-20 flex h-[72px] w-full items-stretch border-t border-[var(--border)] bg-white">
+    <nav className="no-print flex h-[72px] w-full shrink-0 items-stretch border-t border-[var(--border)] bg-white pb-[env(safe-area-inset-bottom)]">
       {items.map((item) => {
         const active = item.activeMatch
           ? item.activeMatch(pathname ?? "")

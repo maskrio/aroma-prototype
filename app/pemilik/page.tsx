@@ -35,17 +35,23 @@ export default function PemilikDashboardPage() {
   const lowStock = variants.filter((v) => v.stok <= 20).length;
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col overflow-hidden">
       <TopBar
         title="Ringkasan"
         subtitle={`Hari ini · ${now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long" })}`}
         variant="accent"
         right={
           <Link
-            href="/pemilik/katalog"
-            className="flex h-11 items-center rounded-full bg-white/15 px-4 text-white text-sm font-semibold hover:bg-white/25"
+            href="/"
+            className="flex h-11 items-center gap-2 rounded-full bg-white/15 px-3 text-white text-sm font-semibold hover:bg-white/25"
+            aria-label="Keluar"
           >
-            Kelola Katalog
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 17l5-5-5-5" />
+              <path d="M20 12H9" />
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            </svg>
+            Keluar
           </Link>
         }
       />

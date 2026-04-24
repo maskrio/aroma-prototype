@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { findUnit, findVariant } from "@/lib/fake-data";
+import { findPastOrder, findUnit, findVariant } from "@/lib/fake-data";
 import { rupiah, waktu } from "@/lib/format";
 import { BigButton } from "@/components/BigButton";
 
@@ -39,13 +39,34 @@ export default function PemilikStrukPage({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // 1) Freshly-approved orders are snapshotted in sessionStorage.
     const raw = window.sessionStorage.getItem(`toko-demo-pemilik-struk-${id}`);
-    if (!raw) { setSnap(null); return; }
-    try {
-      setSnap(JSON.parse(raw) as Snapshot);
-    } catch {
-      setSnap(null);
+    if (raw) {
+      try {
+        setSnap(JSON.parse(raw) as Snapshot);
+        return;
+      } catch {
+        // fall through
+      }
     }
+    // 2) Historical orders come from the fake pastOrders list.
+    const past = findPastOrder(id);
+    if (past) {
+      setSnap({
+        orderId: past.id,
+        nomor: past.nomor,
+        kasirNama: past.kasirNama,
+        approvedAt: past.approvedAt,
+        lines: past.lines,
+        subtotalAsli: past.subtotalAsli,
+        subtotalNego: past.subtotalNego,
+        potongan: past.potongan,
+        totalAkhir: past.totalAkhir,
+        catatan: past.catatan,
+      });
+      return;
+    }
+    setSnap(null);
   }, [id]);
 
   if (snap === undefined) return null;
@@ -71,9 +92,9 @@ export default function PemilikStrukPage({
   const approved = new Date(snap.approvedAt);
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col overflow-hidden">
       {/* Non-print toolbar */}
-      <div className="no-print sticky top-0 z-10 flex items-center justify-between border-b border-[var(--border)] bg-white px-4 py-3">
+      <div className="no-print shrink-0 flex items-center justify-between border-b border-[var(--border)] bg-white px-4 py-3">
         <button
           onClick={() => router.push("/pemilik")}
           className="flex h-11 items-center gap-2 rounded-full px-3 text-[var(--foreground)] hover:bg-[var(--muted)]"
@@ -100,7 +121,7 @@ export default function PemilikStrukPage({
       )}
 
       {/* Receipt paper */}
-      <div className="flex flex-1 justify-center bg-[var(--muted)] p-4 print:bg-white print:p-0">
+      <div className="flex flex-1 justify-center overflow-auto bg-[var(--muted)] p-4 print:bg-white print:p-0">
         <div className="w-full max-w-sm rounded-xl bg-white p-5 text-sm shadow-sm print:shadow-none print:rounded-none print:max-w-none">
           <div className="mb-3 text-center">
             <div className="text-lg font-bold">TOKO DEMO</div>
@@ -203,13 +224,26 @@ export default function PemilikStrukPage({
         </div>
       </div>
 
-      <div className="no-print p-4 grid grid-cols-2 gap-3">
-        <BigButton variant="outline" onClick={() => router.push(`/pemilik/pesanan/${snap.orderId}`)}>
-          Edit lagi
-        </BigButton>
-        <BigButton variant="primary" onClick={() => router.push("/pemilik")}>
-          Selesai
-        </BigButton>
+      <div className="no-print shrink-0 border-t border-[var(--border)] bg-white p-4 grid grid-cols-2 gap-3">
+        {snap.orderId.startsWith("past_") ? (
+          <>
+            <BigButton variant="outline" onClick={() => router.push("/pemilik/riwayat")}>
+              ← Riwayat
+            </BigButton>
+            <BigButton variant="primary" onClick={() => window.print()}>
+              🖨️ Cetak Ulang
+            </BigButton>
+          </>
+        ) : (
+          <>
+            <BigButton variant="outline" onClick={() => router.push(`/pemilik/pesanan/${snap.orderId}`)}>
+              Edit lagi
+            </BigButton>
+            <BigButton variant="primary" onClick={() => router.push("/pemilik")}>
+              Selesai
+            </BigButton>
+          </>
+        )}
       </div>
     </div>
   );
