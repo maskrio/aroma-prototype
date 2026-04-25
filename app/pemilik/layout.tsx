@@ -45,6 +45,20 @@ export default function PemilikLayout({ children }: { children: React.ReactNode 
       activeMatch: (p) => p.startsWith("/pemilik/stok"),
     },
     {
+      href: "/pemilik/distributor",
+      label: "Suplier",
+      icon: (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 7h13l5 5v5h-3" />
+          <path d="M3 7v10h2" />
+          <circle cx="8" cy="17" r="2" />
+          <circle cx="18" cy="17" r="2" />
+        </svg>
+      ),
+      activeMatch: (p) =>
+        p.startsWith("/pemilik/distributor") || p.startsWith("/pemilik/pembelian"),
+    },
+    {
       href: "/pemilik/riwayat",
       label: "Riwayat",
       icon: (

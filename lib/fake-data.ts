@@ -1107,3 +1107,233 @@ export const pastOrders: PastOrder[] = generatePastOrders();
 export function findPastOrder(id: string): PastOrder | undefined {
   return pastOrders.find((o) => o.id === id);
 }
+
+// -----------------------------------------------------------------------------
+// Distributors (suplier) and purchase records (pembelian).
+// In real-system terms: BELI inventory movements + a Distributor join.
+// Here we keep them as their own list for the demo.
+// -----------------------------------------------------------------------------
+
+export interface Distributor {
+  id: string;
+  nama: string;
+  kontakNama: string;     // person to contact
+  telepon: string;         // phone / WA number
+  alamat: string;
+  spesialisasi: string[];  // category ids
+  catatan: string;
+}
+
+export const distributors: Distributor[] = [
+  {
+    id: "dist_001",
+    nama: "CV. Plastik Jaya Mandiri",
+    kontakNama: "Pak Hartono",
+    telepon: "0812-3456-7890",
+    alamat: "Jl. Kemakmuran No. 12, Surabaya",
+    spesialisasi: ["plastik"],
+    catatan: "Diskon 5% kalau ambil > 5 bal. Antar pagi, biasanya jam 8-10.",
+  },
+  {
+    id: "dist_002",
+    nama: "PT. Tomat Indonesia",
+    kontakNama: "Bu Sari",
+    telepon: "0813-1111-2222",
+    alamat: "Pergudangan Surya Blok A-12, Sidoarjo",
+    spesialisasi: ["plastik"],
+    catatan: "Brand Tomat & Wong saja. Min order 3 dus. Bayar tempo 14 hari.",
+  },
+  {
+    id: "dist_003",
+    nama: "UD. Sumber Abadi",
+    kontakNama: "Pak Joko",
+    telepon: "0856-7890-1234",
+    alamat: "Jl. Distributor Raya No. 45, Surabaya",
+    spesialisasi: ["minuman"],
+    catatan: "Aqua, Le Minerale, Pocari. COD untuk order < 2 juta.",
+  },
+  {
+    id: "dist_004",
+    nama: "CV. Bogasari Distribusi",
+    kontakNama: "Bu Widya",
+    telepon: "0819-2222-3333",
+    alamat: "Jl. Industri No. 88, Sidoarjo",
+    spesialisasi: ["bahan-kue"],
+    catatan: "Tepung terigu Segitiga & Cakra. Pengiriman langsung dari pabrik.",
+  },
+  {
+    id: "dist_005",
+    nama: "Toko Manis Sejahtera",
+    kontakNama: "Pak Anton",
+    telepon: "0822-4444-5555",
+    alamat: "Pasar Atom Lt. 2 Blok C-7, Surabaya",
+    spesialisasi: ["bahan-kue", "minuman"],
+    catatan: "Gulaku, Pondan, Koepoe-Koepoe. Bisa nego untuk grosir.",
+  },
+  {
+    id: "dist_006",
+    nama: "PT. Indofood Sales",
+    kontakNama: "Bu Linda",
+    telepon: "0815-6666-7777",
+    alamat: "Jl. MT Haryono No. 200, Surabaya",
+    spesialisasi: ["snack", "minuman", "bahan-kue"],
+    catatan: "Chitato, Good Day, Frisian Flag. Promo bulanan tanggal 1.",
+  },
+];
+
+export interface PembelianItem {
+  variantId: string;
+  qty: number;          // in chosen unit
+  unitId: string;
+  hargaSatuan: number;  // per unit (not per pcs)
+  subtotal: number;     // qty * hargaSatuan
+}
+
+export interface Pembelian {
+  id: string;
+  nomor: string;
+  distributorId: string;
+  tanggal: string;      // ISO
+  items: PembelianItem[];
+  total: number;
+  catatan: string;
+}
+
+function generatePembelian(): Pembelian[] {
+  const out: Pembelian[] = [];
+  const rng = mulberry32(7777);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let pbNum = 1;
+
+  // Per-distributor brand filter — deciding which variants this distributor
+  // typically supplies. Beyond category, narrowed by brand.
+  const distBrandFilter: Record<string, (v: Variant) => boolean> = {
+    dist_001: (v) =>
+      v.kategoriId === "plastik" && v.brand !== "Tomat" && v.brand !== "Wong",
+    dist_002: (v) =>
+      v.kategoriId === "plastik" && (v.brand === "Tomat" || v.brand === "Wong"),
+    dist_003: (v) =>
+      v.kategoriId === "minuman" &&
+      ["Aqua", "Le Minerale", "Otsuka"].includes(v.brand),
+    dist_004: (v) => v.kategoriId === "bahan-kue" && v.brand === "Bogasari",
+    dist_005: (v) =>
+      v.kategoriId === "bahan-kue" &&
+      ["Gulaku", "Pondan", "Koepoe-Koepoe", "Fermipan", "Blue Band", "Ceres", "Frisian Flag"].includes(v.brand),
+    dist_006: (v) =>
+      ["snack", "bahan-kue", "minuman"].includes(v.kategoriId) &&
+      ["Indofood", "Mayora", "Silver Queen"].includes(v.brand),
+  };
+
+  for (const dist of distributors) {
+    const filter = distBrandFilter[dist.id];
+    if (!filter) continue;
+    const eligible = variants.filter(filter);
+    if (eligible.length === 0) continue;
+
+    const numPurchases = 2 + Math.floor(rng() * 2); // 2-3 per distributor
+    for (let i = 0; i < numPurchases; i++) {
+      const daysBack = 1 + Math.floor(rng() * 60);
+      const date = new Date(today);
+      date.setDate(today.getDate() - daysBack);
+
+      const itemCount = Math.min(eligible.length, 2 + Math.floor(rng() * 4));
+      const chosen = new Set<string>();
+      while (chosen.size < itemCount) {
+        chosen.add(eligible[Math.floor(rng() * eligible.length)].id);
+      }
+
+      const items: PembelianItem[] = [...chosen].map((id) => {
+        const v = findVariant(id)!;
+        // Prefer buying in pak / bal / bak (bulk units).
+        const bulkUnits = v.harga.filter((p) =>
+          ["pak", "bal", "bak"].includes(p.unitId),
+        );
+        const priceRow =
+          bulkUnits.length > 0
+            ? bulkUnits[Math.floor(rng() * bulkUnits.length)]
+            : v.harga[0];
+        const sellPrice = priceRow.harga;
+        // Buy at ~70-85% of sell price.
+        const buyPriceRaw = sellPrice * (0.72 + rng() * 0.13);
+        const buyPrice = Math.round(buyPriceRaw / 100) * 100;
+        const qty = 2 + Math.floor(rng() * 8); // 2-9 units
+        return {
+          variantId: id,
+          unitId: priceRow.unitId,
+          qty,
+          hargaSatuan: buyPrice,
+          subtotal: qty * buyPrice,
+        };
+      });
+
+      const total = items.reduce((s, it) => s + it.subtotal, 0);
+      const tanggal = new Date(date);
+      tanggal.setHours(8 + Math.floor(rng() * 8), Math.floor(rng() * 60));
+
+      out.push({
+        id: `pb_${String(pbNum).padStart(3, "0")}`,
+        nomor: `PB-${String(pbNum).padStart(3, "0")}`,
+        distributorId: dist.id,
+        tanggal: tanggal.toISOString(),
+        items,
+        total,
+        catatan: rng() < 0.25 ? "Pengiriman tepat waktu." : "",
+      });
+      pbNum++;
+    }
+  }
+
+  return out.sort((a, b) => b.tanggal.localeCompare(a.tanggal));
+}
+
+export const pembelianHistory: Pembelian[] = generatePembelian();
+
+export function findDistributor(id: string): Distributor | undefined {
+  return distributors.find((d) => d.id === id);
+}
+
+export function findPembelian(id: string): Pembelian | undefined {
+  return pembelianHistory.find((p) => p.id === id);
+}
+
+export function pembelianFor(distributorId: string): Pembelian[] {
+  return pembelianHistory.filter((p) => p.distributorId === distributorId);
+}
+
+export interface DistributorStats {
+  count: number;       // # of purchases
+  totalSpent: number;
+  lastDate: Date | null;
+  uniqueItems: number;
+  topVariantIds: string[]; // top 5 most-purchased variants
+}
+
+export function distributorStats(distributorId: string): DistributorStats {
+  const list = pembelianFor(distributorId);
+  if (list.length === 0) {
+    return { count: 0, totalSpent: 0, lastDate: null, uniqueItems: 0, topVariantIds: [] };
+  }
+  const totalSpent = list.reduce((s, p) => s + p.total, 0);
+  const variantQtys = new Map<string, number>();
+  for (const p of list) {
+    for (const i of p.items) {
+      variantQtys.set(i.variantId, (variantQtys.get(i.variantId) ?? 0) + i.qty);
+    }
+  }
+  const sortedVariants = [...variantQtys.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([id]) => id);
+  const lastDate = list.reduce<Date | null>((latest, p) => {
+    const t = new Date(p.tanggal);
+    if (!latest || t > latest) return t;
+    return latest;
+  }, null);
+  return {
+    count: list.length,
+    totalSpent,
+    lastDate,
+    uniqueItems: variantQtys.size,
+    topVariantIds: sortedVariants.slice(0, 5),
+  };
+}

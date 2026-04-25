@@ -57,6 +57,24 @@ export default function KatalogListPage() {
         </Link>
       </div>
 
+      {/* Distributor & Pembelian shortcut */}
+      <div className="grid grid-cols-2 gap-2 px-4 pt-2">
+        <Link
+          href="/pemilik/distributor"
+          className="flex items-center gap-2 rounded-2xl border-2 border-[var(--border)] bg-white p-3 text-sm hover:border-[var(--accent)]"
+        >
+          <span className="text-2xl">🚚</span>
+          <span className="font-semibold leading-tight">Daftar Distributor</span>
+        </Link>
+        <Link
+          href="/pemilik/pembelian/baru"
+          className="flex items-center gap-2 rounded-2xl border-2 border-[var(--accent)] bg-[var(--accent)] p-3 text-sm text-white hover:brightness-110"
+        >
+          <span className="text-2xl">🧾</span>
+          <span className="font-semibold leading-tight">Catat Pembelian</span>
+        </Link>
+      </div>
+
       {/* Search */}
       <div className="px-4 pt-3">
         <div className="flex items-center gap-2 rounded-2xl border-2 border-[var(--border)] bg-white px-4 focus-within:border-[var(--primary)]">
